@@ -46,7 +46,7 @@ public class PersonService {
 	}
 
 	public Person findById(Integer id) {
-		return this.personRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+		return this.personRepository.findById(id).orElseThrow(() -> new IllegalArgumentException(" Absence ID de la personne entité")  );
 	}
 
 	

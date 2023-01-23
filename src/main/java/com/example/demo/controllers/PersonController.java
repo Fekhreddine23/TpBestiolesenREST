@@ -24,6 +24,7 @@ import com.example.demo.model.Person;
 import com.example.demo.repository.AnimalRepository;
 import com.example.demo.repository.PersonRepository;
 import com.example.demo.services.PersonService;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 
 import jakarta.validation.Valid;
 
@@ -49,10 +50,6 @@ public class PersonController {
 	@GetMapping("/{id}") // affiche une personne
 	public Person findOne(@PathVariable("id") Integer id) {
 
-		if (personService.findById(id) == null) {
-			throw new IllegalArgumentException(" Absence ID de la personne entité");
-		}
-
 		return this.personService.findById(id);
 	}
 
@@ -65,7 +62,7 @@ public class PersonController {
 	public Person createPerson(@RequestBody @Valid Person createToPerson) {
 
 		if (createToPerson.getId() != null) {
-			throw new IllegalArgumentException("la personne existe deja");
+			throw new IllegalArgumentException(" erreur la personne ne doit pas avoir id lors de la creation");
 		}
 		return this.personService.create(createToPerson);
 
@@ -79,7 +76,7 @@ public class PersonController {
 		}
 
 		if (updatePerson.getId() == null) {
-			throw new IllegalArgumentException("Missing ID in the Person entity");
+			throw new IllegalArgumentException("besoin de l'id");
 		}
 		return this.personService.update(updatePerson);
 	}
