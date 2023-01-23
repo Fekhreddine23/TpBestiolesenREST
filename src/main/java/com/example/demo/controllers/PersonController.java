@@ -37,15 +37,21 @@ public class PersonController {
 	// methode pagination
 	@GetMapping("/pages")
 	public List<Person> findAll(@RequestParam Integer pageNum, @RequestParam Integer pageSize) {
-		
-		//methode PageRequest.of() 
-		//2 arguments num de la page et taille qu l'on veut
+
+		// methode PageRequest.of()
+		// 2 arguments num de la page et taille qu l'on veut
 		return personService.findPeage(PageRequest.of(pageNum, pageSize)); //
+
+		// throw new RuntimeException("");
 
 	}
 
 	@GetMapping("/{id}") // affiche une personne
 	public Person findOne(@PathVariable("id") Integer id) {
+
+		if (personService.findById(id) == null) {
+			throw new IllegalArgumentException(" Absence ID de la personne entité");
+		}
 
 		return this.personService.findById(id);
 	}
@@ -57,6 +63,10 @@ public class PersonController {
 
 	@PostMapping() // crée une personne
 	public Person createPerson(@RequestBody @Valid Person createToPerson) {
+
+		if (createToPerson.getId() != null) {
+			throw new IllegalArgumentException("la personne existe deja");
+		}
 		return this.personService.create(createToPerson);
 
 	}
@@ -66,6 +76,10 @@ public class PersonController {
 		if (!id.equals(updatePerson.getId())) {
 
 			throw new RuntimeException("probleme");
+		}
+
+		if (updatePerson.getId() == null) {
+			throw new IllegalArgumentException("Missing ID in the Person entity");
 		}
 		return this.personService.update(updatePerson);
 	}
