@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import org.hibernate.event.internal.DefaultPersistOnFlushEventListener;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.model.Person;
@@ -27,10 +30,19 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/rest/person")
 public class PersonController {
-    
-	
+
 	@Autowired
 	PersonService personService;
+
+	// methode pagination
+	@GetMapping("/pages")
+	public List<Person> findAll(@RequestParam Integer pageNum, @RequestParam Integer pageSize) {
+		
+		//methode PageRequest.of() 
+		//2 arguments num de la page et taille qu l'on veut
+		return personService.findPeage(PageRequest.of(pageNum, pageSize)); //
+
+	}
 
 	@GetMapping("/{id}") // affiche une personne
 	public Person findOne(@PathVariable("id") Integer id) {
@@ -57,16 +69,14 @@ public class PersonController {
 		}
 		return this.personService.update(updatePerson);
 	}
-	
-	
-	
-	@DeleteMapping("/{id}")//delete
-	public void deletePerson(@PathVariable("id")Integer id, @RequestBody @Valid Person deletePerson) {
-		if(!id.equals(deletePerson.getId())) {
+
+	@DeleteMapping("/{id}") // delete
+	public void deletePerson(@PathVariable("id") Integer id, @RequestBody @Valid Person deletePerson) {
+		if (!id.equals(deletePerson.getId())) {
 			throw new RuntimeException("Erreur : pas present en bdd");
 		}
-		     this.personService.delete(id);
-		 
+		this.personService.delete(id);
+
 	}
 
 }
