@@ -70,14 +70,15 @@ public class PersonController {
 
 	@PutMapping("/{id}") // update
 	public Person updatePerson(@PathVariable("id") Integer id, @RequestBody @Valid Person updatePerson) {
-		if (!id.equals(updatePerson.getId())) {
+		
+		/*if (!id.equals(updatePerson.getId())) {
 
 			throw new RuntimeException("probleme");
 		}
 
 		if (updatePerson.getId() == null) {
 			throw new IllegalArgumentException("besoin de l'id");
-		}
+		}*/
 		return this.personService.update(updatePerson);
 	}
 
